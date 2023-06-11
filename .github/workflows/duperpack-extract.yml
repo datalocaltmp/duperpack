@@ -13,9 +13,14 @@ jobs:
           python-version: '3.7'
 
       - name: Install awsebcli
-        run: pip install -U awsebcli
+        run: pip install -U frida-tools
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Hello world!"
+
