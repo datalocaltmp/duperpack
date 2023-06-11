@@ -1,0 +1,15 @@
+name: Superpack Native Library Extraction
+run-name: Duperpack is extracting libraries!
+on: [push]
+jobs:
+  initialize-environment:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+      - uses: actions/checkout@v3
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
