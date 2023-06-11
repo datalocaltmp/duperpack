@@ -1,5 +1,5 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+name: Superpack Native Library Extraction
+run-name: Duperpack is extracting libraries!
 on: [push]
 jobs:
   check-bats-version:
