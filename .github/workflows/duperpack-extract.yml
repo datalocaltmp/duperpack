@@ -19,6 +19,3 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-
-      - name: test connectivity
-	run: adb devices
