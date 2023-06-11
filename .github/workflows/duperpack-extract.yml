@@ -8,8 +8,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: install-frida-tools
-	run: pip3 install frida-tools
+       - uses: actions/setup-python@master
+         with:
+           python-version: '3.7'
+
+       - name: Install awsebcli
+         run: pip install -U awsebcli
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
