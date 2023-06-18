@@ -1,6 +1,9 @@
 #!/bin/bash
 ls /Users/runner/Library/Android/sdk/
-ls /Users/runner/Library/Android/sdk/build-tools
+ls /Users/runner/Library/Android/sdk/build-tools/29.0.0/
+echo $PATH
+export PATH=$PATH:/Users/runner/Library/Android/sdk/build-tools/29.0.0/
+echo $PATH
 
 # Install WhatsApp normally and extract Arm64 libraries
 /Users/runner/Library/Android/sdk/platform-tools/adb root
