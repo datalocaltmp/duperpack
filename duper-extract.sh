@@ -1,4 +1,7 @@
 #!/bin/bash
+ls /Users/runner/Library/Android/sdk/
+ls /Users/runner/Library/Android/sdk/build-tools
+
 # Install WhatsApp normally and extract Arm64 libraries
 /Users/runner/Library/Android/sdk/platform-tools/adb root
 /Users/runner/Library/Android/sdk/platform-tools/adb install WhatsApp.apk
