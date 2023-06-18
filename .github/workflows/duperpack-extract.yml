@@ -18,6 +18,12 @@ jobs:
       - name: Install lief
         run: pip install -U lief
 
+      - name: Install apktool
+        run: |
+          brew update
+          brew install apktool
+          brew upgrade
+
       - name: Create emulator and install frida-server
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -26,5 +32,3 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: echo "hello world!"
-#          script: ./duper-extract.sh
-
