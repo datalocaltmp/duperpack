@@ -24,6 +24,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          script: echo 'Intizialized!'
 
       - name: install WhatsApp
         run: adb install WhatsApp.apk
@@ -32,7 +33,14 @@ jobs:
         run: adb shell am start -n com.whatsapp/.Main && adb root
 
       - name: Pull standard libs
-        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && mv libs.spk.zst libs.spk.zst.arm64
+        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && zip -r libs.spk.zst.arm64.zip libs.spk.zst/
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'WhatsApp Arm64 Libraries'
+          path: libs.spk.zst.arm64.zip
+          retention-days: 1
 
       - name: Uninstall WhatsApp
         run: adb uninstall com.whatsapp
@@ -46,5 +54,74 @@ jobs:
       - name: Rebuild WhatsApp
         run: apktool b WhatsApp
 
-      - name: Sign new APK
-        run: java -jar ./uber-apk-signer-1.3.0.jar -a ./WhatsApp/dist/WhatsApp.apk && ls ./WhatsApp/dist/
+      - name: Sign and install new APK
+        run: java -jar ./uber-apk-signer-1.3.0.jar -a ./WhatsApp/dist/WhatsApp.apk && ls ./WhatsApp/dist/ && adb install WhatsApp/dist/WhatsApp-aligned-debugSigned.apk
+      
+      - name: Start WhatsApp
+        run: adb shell am start -n com.whatsapp/.Main && adb root
+
+      - name: Pull standard libs
+        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && zip -r libs.spk.zst.x86.zip libs.spk.zst/
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'WhatsApp x86 Libraries'
+          path: libs.spk.zst.x86.zip
+          retention-days: 1
+
+      - name: Uninstall WhatsApp
+        run: adb uninstall com.whatsapp
+
+      - name: Unpack WhatsApp
+        run: apktool d -rs WhatsApp.apk
+
+      - name: List directory and move
+        run: ls ./WhatsApp && mv WhatsApp/assets/compressed/x86_64/libs.spk.zst WhatsApp/assets/compressed/arm64-v8a/.
+      
+      - name: Rebuild WhatsApp
+        run: apktool b WhatsApp
+
+      - name: Sign and install new APK
+        run: java -jar ./uber-apk-signer-1.3.0.jar -a ./WhatsApp/dist/WhatsApp.apk && ls ./WhatsApp/dist/ && adb install WhatsApp/dist/WhatsApp-aligned-debugSigned.apk
+      
+      - name: Start WhatsApp
+        run: adb shell am start -n com.whatsapp/.Main && adb root
+
+      - name: Pull standard libs
+        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && zip -r libs.spk.zst.x86_64.zip libs.spk.zst/
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'WhatsApp x86_64 Libraries'
+          path: libs.spk.zst.x86_64.zip
+          retention-days: 1
+      
+      - name: Uninstall WhatsApp
+        run: adb uninstall com.whatsapp
+
+      - name: Unpack WhatsApp
+        run: apktool d -rs WhatsApp.apk
+
+      - name: List directory and move
+        run: ls ./WhatsApp && mv WhatsApp/assets/compressed/armeabi-v7a/libs.spk.zst WhatsApp/assets/compressed/arm64-v8a/.
+      
+      - name: Rebuild WhatsApp
+        run: apktool b WhatsApp
+
+      - name: Sign and install new APK
+        run: java -jar ./uber-apk-signer-1.3.0.jar -a ./WhatsApp/dist/WhatsApp.apk && ls ./WhatsApp/dist/ && adb install WhatsApp/dist/WhatsApp-aligned-debugSigned.apk
+      
+      - name: Start WhatsApp
+        run: adb shell am start -n com.whatsapp/.Main && adb root
+
+      - name: Pull standard libs
+        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && zip -r libs.spk.zst.armeabi-v7a.zip libs.spk.zst/
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'WhatsApp armeabi-v7a Libraries'
+          path: libs.spk.zst.armeabi-v7a.zip
+          retention-days: 1
