@@ -12,12 +12,6 @@ jobs:
         with:
           python-version: '3.7'
 
-      - name: Install frida-tools
-        run: pip install -U frida-tools
-
-      - name: Install lief
-        run: pip install -U lief
-
       - name: Install apktool
         run: |
           brew update
@@ -30,10 +24,27 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: echo "hello world!"
+
+      - name: install WhatsApp
+        run: adb install WhatsApp.apk
+
+      - name: Start WhatsApp
+        run: adb shell am start -n com.whatsapp/.Main && adb root
+
+      - name: Pull standard libs
+        run: adb pull /data/data/com.whatsapp/files/decompressed/libs.spk.zst/ . && mv libs.spk.zst libs.spk.zst.arm64
+
+      - name: Uninstall WhatsApp
+        run: adb uninstall com.whatsapp
 
       - name: Unpack WhatsApp
-        run: apktool d -rs WhatsApp
+        run: apktool d -rs WhatsApp.apk
 
-      - name: List directory
-        run: ls ./WhatsApp
+      - name: List directory and move
+        run: ls ./WhatsApp && mv WhatsApp/assets/compressed/x86/libs.spk.zst WhatsApp/assets/compressed/arm64-v8a/.
+      
+      - name: Rebuild WhatsApp
+        run: apktool b WhatsApp
+
+      - name: Sign new APK
+        run: java -jar ./uber-apk-signer-1.3.0.jar -a ./WhatsApp/dist/WhatsApp.apk && ls ./WhatsApp/dist/
