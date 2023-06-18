@@ -15,6 +15,9 @@ jobs:
       - name: Install frida-tools
         run: pip install -U frida-tools
 
+      - name: Install lief
+        run: pip install -U lief
+
       - name: Create emulator and install frida-server
         uses: reactivecircus/android-emulator-runner@v2
         with:
