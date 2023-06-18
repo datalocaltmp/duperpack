@@ -3,7 +3,7 @@ run-name: Duperpack is extracting libraries!
 on: [push]
 jobs:
   initialize-environment:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -17,7 +17,6 @@ jobs:
         with:
           api-level: 29
           force-avd-creation: false
-          emulator-build: 7425822
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: echo 'Intizialized!'
