@@ -22,7 +22,6 @@ jobs:
         run: |
           brew update
           brew install apktool
-          brew upgrade
 
       - name: Create emulator and install frida-server
         uses: reactivecircus/android-emulator-runner@v2
@@ -32,3 +31,9 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: echo "hello world!"
+
+      - name: Unpack WhatsApp
+        run: apktool d -rs WhatsApp
+
+      - name: List directory
+        run: ls ./WhatsApp
