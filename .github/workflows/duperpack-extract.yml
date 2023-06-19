@@ -4,6 +4,9 @@ on: [push]
 jobs:
   initialize-environment:
     runs-on: macos-11
+    strategy:
+      matrix:
+        api-level: [29]
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -15,10 +18,32 @@ jobs:
       - name: Install apktool
         run: brew install apktool
 
-      - name: Create emulator and install frida-server
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+        
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Install and extract binaries
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
@@ -27,27 +52,27 @@ jobs:
       - name: 'Upload Arm64 Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: 'WhatsApp Arm64 Libraries'
+          name: 'WhatsApp-Arm64-libraries'
           path: libs.spk.zst.arm64.zip
           retention-days: 1
 
       - name: 'Upload x86 Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: 'WhatsApp x86 Libraries'
+          name: 'WhatsApp-x86-libraries'
           path: libs.spk.zst.x86.zip
           retention-days: 1
 
       - name: 'Upload x86_64 Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: 'WhatsApp x86_64 Libraries'
+          name: 'WhatsApp-x86_64-libraries'
           path: libs.spk.zst.x86_64.zip
           retention-days: 1
 
       - name: 'Upload armeabi-v7a Artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: 'WhatsApp armeabi-v7a Libraries'
+          name: 'WhatsApp-armeabi-v7a-libraries'
           path: libs.spk.zst.armeabi-v7a.zip
           retention-days: 1
