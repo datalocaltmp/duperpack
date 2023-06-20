@@ -1,5 +1,4 @@
 name: Superpack Native Library Extraction
-run-name: Duperpack is extracting libraries!
 on: [push]
 jobs:
   initialize-environment:
